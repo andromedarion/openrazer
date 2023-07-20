@@ -109,7 +109,6 @@ class RippleEffectThread(threading.Thread):
         self._active = False
 
     def static_reset(self):
-        self._keyboard_grid.reset_rows()
         for row in range(self._rows -1 ):
             for col in range(self._cols -1):
                 self._keyboard_grid.set_key_colour(row, col, self.low_colour)
@@ -119,7 +118,6 @@ class RippleEffectThread(threading.Thread):
         Event loop
         """
         # pylint: disable=too-many-nested-blocks,too-many-branches
-        # self.low_colour = self._colour
         self.static_reset()
         expire_diff = datetime.timedelta(seconds=2)
 
