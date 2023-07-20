@@ -37,6 +37,16 @@ class RippleEffectThread(threading.Thread):
         self._keyboard_grid = KeyboardColour(self._rows, self._cols)
 
     @property
+    def low_colour(self):
+        """
+        Get the low color
+        """
+        if self._colour is not None:
+            return tuple(int(c * 0.2) for c in self._colour)
+        else:
+            return (0, 100, 0)
+
+    @property
     def shutdown(self):
         """
         Get the shutdown flag
@@ -88,6 +98,7 @@ class RippleEffectThread(threading.Thread):
             self._colour = None
         else:
             self._colour = colour
+            # self._low_colour = tuple(int(c * 0.2) for c in colour)
         self._refresh_rate = refresh_rate
         self._active = True
 
@@ -97,11 +108,19 @@ class RippleEffectThread(threading.Thread):
         """
         self._active = False
 
+    def static_reset(self):
+        self._keyboard_grid.reset_rows()
+        for row in range(self._rows -1 ):
+            for col in range(self._cols -1):
+                self._keyboard_grid.set_key_colour(row, col, self.low_colour)
+
     def run(self):
         """
         Event loop
         """
         # pylint: disable=too-many-nested-blocks,too-many-branches
+        # self.low_colour = self._colour
+        self.static_reset()
         expire_diff = datetime.timedelta(seconds=2)
 
         # self._parent: RippleManager
@@ -118,6 +137,8 @@ class RippleEffectThread(threading.Thread):
             if self._active:
                 # Clear keyboard
                 self._keyboard_grid.reset_rows()
+
+                self.static_reset()
 
                 now = datetime.datetime.now()
 
