@@ -98,7 +98,6 @@ class RippleEffectThread(threading.Thread):
             self._colour = None
         else:
             self._colour = colour
-            # self._low_colour = tuple(int(c * 0.2) for c in colour)
         self._refresh_rate = refresh_rate
         self._active = True
 
